@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI("AIzaSyAUshmiSaFBPPQUfXb9Y_EK1EkbiyFrROo");
+const genAI = new GoogleGenerativeAI("api key");
 
 function fileToGenerativePart(path, mimeType) {
   return {
@@ -32,6 +32,9 @@ Eco-Friendly Disposal: Suggest the most environmentally friendly way to dispose 
 Recycling Potential: Indicate if this waste type can be recycled, and if so, suggest the appropriate recycling method.
     
     `;
+
+  console.log(req.body);
+  console.log(req.file);
 
   const imageParts = [fileToGenerativePart("1.png", "image/png")];
 
