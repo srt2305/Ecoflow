@@ -9,9 +9,12 @@ import CustomButton from "../../components/CustomButton";
 
 import { images } from "../../constants";
 
-// import { createUser } from "../../lib/appwrite";
+import { createUser } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
+
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -21,21 +24,22 @@ const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-    if (!form.username || !form.email || !form.password) {
-      Alert.alert("Error", "All fields are mandatory");
+    if (form.username === "" || form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
     }
 
     setIsSubmitting(true);
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+      setUser(result);
+      setIsLoggedIn(true);
 
-    // try {
-    //   const result = await createUser(form.email, form.password, form.username);
-
-    //   router.replace("/home");
-    // } catch (error) {
-    //   Alert.alert("Error", error.message);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
