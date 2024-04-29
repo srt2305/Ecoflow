@@ -33,8 +33,8 @@ const Porfile = () => {
             title={item.title}
             thumbnail={item.thumbnail}
             video={item.video}
-            avatar={item.users.avatar}
-            username={item.users.username}
+            avatar={item.creator.avatar}
+            username={item.creator.username}
           />
         )}
         ListHeaderComponent={() => (

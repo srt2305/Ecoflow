@@ -208,3 +208,15 @@ export const createImage = async (form) => {
     throw new Error(error);
   }
 };
+
+export const searchPost = async (query) => {
+  try {
+    const posts = await databases.listDocuments(databaseId, postCollectionId, [
+      Query.search("title", query),
+    ]);
+
+    return posts.documents;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

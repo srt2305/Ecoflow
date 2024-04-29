@@ -22,7 +22,7 @@ const Home = () => {
 
   const { data: posts, refetch } = useAppwrite(getAllPosts);
 
-  const [selectedCategory, setSelectedCategory] = useState("waste");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -68,8 +68,31 @@ const Home = () => {
               </View>
             </View>
 
-            <View className="flex-row justify-around">
-              <TouchableOpacity onPress={() => setSelectedCategory("waste")}>
+            <View className="flex-row justify-around items-center">
+              <TouchableOpacity
+                onPress={() => setSelectedCategory("all")}
+                className={`${
+                  selectedCategory === "all"
+                    ? "bg-white py-1 w-20 items-center rounded-xl"
+                    : ""
+                }`}
+              >
+                <Text
+                  className={`${
+                    selectedCategory === "all" ? "text-blue-400" : "text-white"
+                  }`}
+                >
+                  All
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSelectedCategory("waste")}
+                className={`${
+                  selectedCategory === "waste"
+                    ? "bg-white py-1 w-20 items-center rounded-xl"
+                    : ""
+                }`}
+              >
                 <Text
                   className={`${
                     selectedCategory === "waste"
@@ -80,7 +103,14 @@ const Home = () => {
                   Waste
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setSelectedCategory("road")}>
+              <TouchableOpacity
+                onPress={() => setSelectedCategory("road")}
+                className={`${
+                  selectedCategory === "road"
+                    ? "bg-white py-1 w-20 items-center rounded-xl"
+                    : ""
+                }`}
+              >
                 <Text
                   className={`${
                     selectedCategory === "road" ? "text-blue-400" : "text-white"
