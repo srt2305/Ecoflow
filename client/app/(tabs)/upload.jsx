@@ -91,18 +91,22 @@ const Upload = () => {
           Upload Problem
         </Text>
 
-        <View className="flex-1 justify-center bg-white items-center">
+        <View className="border-sky-500">
           <Picker
+            className="border-white"
             selectedValue={value}
             onValueChange={(itemValue) => setValue(itemValue)}
+            style={{
+              color: "white",
+            }}
           >
             <Picker.Item
               label="Select a category"
-              value=""
-              className="text-black-100"
+              value="Select a category"
+              className="text-white"
             />
-            <Picker.Item label="Waste" value="1" className="text-black-100" />
-            <Picker.Item label="Road" value="2" className="text-black-100" />
+            <Picker.Item label="Waste" value="1" className="text-white" />
+            <Picker.Item label="Road" value="2" className="text-white" />
           </Picker>
           {value !== "" && (
             <Text className="mt-5 text-xl text-white">
