@@ -185,8 +185,11 @@ export const uploadFile = async (file, type) => {
 };
 
 export const createImage = async (form) => {
+  form.final_category = "road";
+  form.remark = "good";
+  console.log("form", form);
   try {
-    const [imageUrl] = await Promise.all([uploadFile(form.thumbnail, "image")]);
+    const [imageUrl] = await Promise.all([uploadFile(form.image, "image")]);
 
     const newPost = await databases.createDocument(
       databaseId,
@@ -194,12 +197,14 @@ export const createImage = async (form) => {
       ID.unique(),
       {
         title: form.title,
-        image: imageUrl,
+        image: form.image,
         description: form.description,
         status: false,
         creator: form.userId,
         category: form.category,
         location: form.location,
+        final_category: form.final_category,
+        remark: form.remark,
       }
     );
 

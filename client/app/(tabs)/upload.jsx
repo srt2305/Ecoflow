@@ -5,18 +5,23 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Button,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { icons } from "../../constants";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { createImage } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { Picker } from "@react-native-picker/picker";
+// import Geolocation from "@react-native-community/geolocation";
+import * as Location from "expo-location";
+import * as geolib from "geolib";
+import { FileSystem } from "react-native-unimodules"; // Import FileSystem from expo if you're using Expo
 
 const Upload = () => {
   const { user } = useGlobalContext();
@@ -30,6 +35,80 @@ const Upload = () => {
   });
 
   const [value, setValue] = useState("");
+  // const [userLocation, setUserLocation] = useState(null);
+  // const [sharedLocations, setSharedLocations] = useState([]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     // Request permission to access the device's location
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       console.error("Permission to access location was denied");
+  //       return;
+  //     }
+
+  //     // Get the current location
+  //     let location = await Location.getCurrentPositionAsync({});
+  //     setUserLocation({
+  //       latitude: location.coords.latitude,
+  //       longitude: location.coords.longitude,
+  //     });
+
+  //     // Subscribe to location updates
+  //     Location.watchPositionAsync({ distanceInterval: 10 }, (location) => {
+  //       setUserLocation({
+  //         latitude: location.coords.latitude,
+  //         longitude: location.coords.longitude,
+  //       });
+  //     });
+  //   })();
+  //   return () => {
+  //     Location.stopLocationUpdatesAsync();
+  //   };
+  // }, []);
+
+  // const fetchAddress = async (latitude, longitude) => {
+  //   try {
+  //     const addressData = await geolib.getReverse({ latitude, longitude });
+  //     console.warn("hello", addressData.formattedAddress);
+  //     return addressData.formattedAddress;
+  //   } catch (error) {
+  //     console.error("Error fetching address:", error);
+  //     return null;
+  //   }
+  // };
+
+  // const handleShareLocation = () => {
+  //   if (userLocation) {
+  //     setSharedLocations(userLocation);
+  //     console.warn(userLocation);
+  //     fetchAddress(userLocation["latitude"], userLocation["longitude"]);
+  //   }
+  // };
+
+  const checkValidity = async () => {
+    const imageData = form.image;
+    try {
+      const imageFile = await FileSystem.readAsStringAsync(imageData.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      console.log("here");
+      const response = await fetch(`${process.env.API}/handle-image`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageData: imageFile }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const openPicker = async (selectType) => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -47,21 +126,23 @@ const Upload = () => {
   };
 
   const submit = async () => {
-    if (
-      !form.title ||
-      !form.image ||
-      !form.description ||
-      !form.location ||
+    console.log(
+      form.title,
+      !form.image,
+      !form.description,
+      !form.location,
       !form.category
-    ) {
+    );
+    if (!form.title || !form.image || !form.description || !form.location) {
       return Alert.alert("Please fill in all fields");
     }
 
-    form.category = value;
+    form.category = value === 1 ? "waste" : "road";
 
     setUploading(true);
 
     try {
+      // await checkValidity();
       await createImage({
         ...form,
         userId: user.$id,
@@ -163,6 +244,9 @@ const Upload = () => {
           handleChangeText={(e) => setform({ ...form, location: e })}
           otherStyles="mt-7"
         />
+        {/* <View>
+          <Button title="Share Location" onPress={handleShareLocation} />
+        </View> */}
 
         <CustomButton
           title="Submit & Publish"
