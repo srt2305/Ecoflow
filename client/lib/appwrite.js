@@ -176,6 +176,8 @@ export const uploadFile = async (file, type) => {
       asset
     );
 
+    console.log(uploadedFile);
+
     const fileUrl = await getFilePreview(uploadedFile.$id, type);
 
     return fileUrl;
@@ -185,11 +187,11 @@ export const uploadFile = async (file, type) => {
 };
 
 export const createImage = async (form) => {
-  form.final_category = "road";
-  form.remark = "good";
   console.log("form", form);
   try {
-    const [imageUrl] = await Promise.all([uploadFile(form.image, "image")]);
+    // const [imageUrl] = await Promise.all([uploadFile(form.image, "image")]);
+
+    // console.log("imageurl", imageUrl);
 
     const newPost = await databases.createDocument(
       databaseId,
@@ -197,9 +199,9 @@ export const createImage = async (form) => {
       ID.unique(),
       {
         title: form.title,
-        image: form.image,
+        image: form.image.uri,
         description: form.description,
-        status: false,
+        status: form.status,
         creator: form.userId,
         category: form.category,
         location: form.location,

@@ -126,13 +126,6 @@ const Upload = () => {
   };
 
   const submit = async () => {
-    console.log(
-      form.title,
-      !form.image,
-      !form.description,
-      !form.location,
-      !form.category
-    );
     if (!form.title || !form.image || !form.description || !form.location) {
       return Alert.alert("Please fill in all fields");
     }
@@ -145,6 +138,9 @@ const Upload = () => {
       // await checkValidity();
       await createImage({
         ...form,
+        status: false,
+        final_category: "renewable",
+        remark: "recycle",
         userId: user.$id,
       });
 
