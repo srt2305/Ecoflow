@@ -13,7 +13,7 @@ import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { useEffect, useState } from "react";
 import { icons } from "../../constants";
-import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import { router } from "expo-router";
 import { createImage } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -120,16 +120,16 @@ const Upload = () => {
   };
 
   const openPicker = async (selectType) => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ["image/png", "image/jpg", "image/jpeg"],
     });
 
     if (!result.canceled) {
       if (selectType === "image") {
-        setform({ ...form, image: result.assets[0] });
+        setform({
+          ...form,
+          image: result.assets[0],
+        });
       }
     }
   };
@@ -144,10 +144,10 @@ const Upload = () => {
     setUploading(true);
 
     try {
-      const isValid = await checkValidity();
-      if (!isValid) {
-        return Alert.alert("Error", "we cannot consider this as a waste");
-      }
+      // const isValid = await checkValidity();
+      // if (!isValid) {
+      //   return Alert.alert("Error", "we cannot consider this as a waste");
+      // }
       await createImage({
         ...form,
         status: false,
