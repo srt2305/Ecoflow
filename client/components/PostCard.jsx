@@ -1,38 +1,64 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { icons } from "../constants";
-// import { images } from "../constants/images.js";
+import { router } from "expo-router";
 
-const PostCard = ({ title, avatar, image, location, status }) => {
+const PostCard = ({
+  id,
+  title,
+  description,
+  image,
+  location,
+  status,
+  avatar,
+  username,
+}) => {
   return (
-    <>
-      <TouchableOpacity className="flex-1 bg-f0f0f0 w-100 border border-2 border-white border-r-9 rounded-lg ">
-        <View className="flex flex-row">
-          <View className="">
+    <TouchableOpacity
+      className="flex-col items-center px-4 mb-14"
+      onPress={() => {
+        router.push(`/post/${id}`);
+      }}
+    >
+      <View className="flex-row gap-3 items-start">
+        <View className="justify-center items-center flex-row flex-1">
+          <View className="w-[52px] h-[52px] rounded-lg border border-secondary justify-center items-center p-0.5">
             <Image
-              // source={images.empty}
-              resizeMode="contain"
-              className="w-[150px] h-[100px]"
+              source={{ uri: avatar }}
+              className="w-full h-full rounded-lg"
+              resizeMode="cover"
             />
           </View>
-          <View className="flex-1 flex-col justify-center w-30 items-start bg-e0e0e0 py-3 px-3 text-white">
-            <Text className={"mb-2 text-white"}>
-              Title: Hlelo this is testing
+
+          <View className="justify-center flex-1 ml-3 gap-y-1 mt-1">
+            <Text
+              className="text-white font-psemibold text-sm"
+              numberOfLines={1}
+            >
+              {title}
             </Text>
-            <Text className="text-14 mb-2  text-white">
-              Location: Hlelo this is testing{" "}
+            <Text
+              className="text-xs text-gray-100 font-pregular truncate"
+              numberOfLines={1}
+            >
+              {description}
             </Text>
-            <Text className="text-16 mb-2 text-white">
-              Description: Hlelo this is testing{" "}
-            </Text>
+            <Text className="text-14 mb-2  text-white">{location}</Text>
           </View>
         </View>
-        <View className="flex-1 flex-row justify-between items-center pb-2 px-5 text-white">
-          <Text className="text-14  text-white"></Text>
-          <Text className="text-14  text-white">Status: {"pending"}</Text>
+
+        <View className="pt-2">
+          <Text className="text-white">{status ? "Completed" : "Pending"}</Text>
         </View>
-      </TouchableOpacity>
-    </>
+      </View>
+
+      <View className="w-full h-60 rounded-xl mt-3 relative justify-center items-center">
+        <Image
+          source={{ uri: image }}
+          className="w-full h-full rounded-xl mt-3"
+          resizeMode="cover"
+        />
+      </View>
+    </TouchableOpacity>
   );
 };
 

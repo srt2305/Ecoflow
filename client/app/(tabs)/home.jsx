@@ -39,12 +39,14 @@ const Home = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <PostCard
+            id={item.$id}
             title={item.title}
             description={item.description}
             image={item.image}
             location={item.location}
             status={item.status}
             avatar={item.creator.avatar}
+            username={item.creator.username}
           />
         )}
         ListHeaderComponent={() => (

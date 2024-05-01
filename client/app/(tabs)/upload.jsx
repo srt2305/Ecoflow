@@ -144,10 +144,10 @@ const Upload = () => {
     setUploading(true);
 
     try {
-      const isValid = await checkValidity();
-      if (!isValid) {
-        return Alert.alert("Error", "we cannot consider this as a waste");
-      }
+      // const isValid = await checkValidity();
+      // if (!isValid) {
+      //   return Alert.alert("Error", "we cannot consider this as a waste");
+      // }
       await createImage({
         ...form,
         status: false,

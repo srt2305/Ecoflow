@@ -157,17 +157,22 @@ export const getFilePreview = async (fileId, type) => {
 
     return fileUrl;
   } catch (error) {
+    console.log("filepreview error");
     throw new Error(error);
   }
 };
 
 export const uploadFile = async (file, type) => {
+  console.log("file", file);
+
   const asset = {
-    name: file.fileName,
+    name: "file",
     type: file.mimeType,
     size: file.filesize,
     uri: file.uri,
   };
+
+  console.log("asset", asset);
 
   try {
     const uploadedFile = await storage.createFile(
@@ -176,12 +181,11 @@ export const uploadFile = async (file, type) => {
       asset
     );
 
-    console.log(uploadedFile);
-
     const fileUrl = await getFilePreview(uploadedFile.$id, type);
 
     return fileUrl;
   } catch (error) {
+    console.log("uploadfile error");
     throw new Error(error);
   }
 };
@@ -189,10 +193,7 @@ export const uploadFile = async (file, type) => {
 export const createImage = async (form) => {
   console.log("form", form);
   try {
-    // const [imageUrl] = await Promise.all([uploadFile(form.image, "image")]);
-
-    // console.log("imageurl", imageUrl);
-
+    // const [thumbnailUrl] = await Promise.all([uploadFile(form.image, "image")]);
     const newPost = await databases.createDocument(
       databaseId,
       postCollectionId,
@@ -209,6 +210,7 @@ export const createImage = async (form) => {
         remark: form.remark,
       }
     );
+    ``;
 
     return newPost;
   } catch (error) {
@@ -216,13 +218,13 @@ export const createImage = async (form) => {
   }
 };
 
-export const searchPost = async (query) => {
+export const searchPost = async (postId) => {
   try {
     const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.search("title", query),
+      Query.equal("$id", postId),
     ]);
 
-    return posts.documents;
+    return posts.documents[0];
   } catch (error) {
     throw new Error(error);
   }

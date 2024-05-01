@@ -30,9 +30,12 @@ const Porfile = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <PostCard
+            id={item.$id}
             title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
+            description={item.description}
+            image={item.image.uri}
+            location={item.location}
+            status={item.status}
             avatar={item.creator.avatar}
             username={item.creator.username}
           />
@@ -63,6 +66,7 @@ const Porfile = () => {
               containerStyles="mt-5"
               titleStyles="text-lg"
             />
+            <InfoBox title={user?.email} titleStyles="text-lg" />
 
             <View className="mt-5 flex flex-row">
               <InfoBox
@@ -72,8 +76,8 @@ const Porfile = () => {
                 containerStyles="mr-10"
               />
               <InfoBox
-                title="1.2k"
-                subtitle="Followers"
+                title={user.admin ? "Admin" : "User"}
+                subtitle="Role"
                 titleStyles="text-xl"
               />
             </View>
