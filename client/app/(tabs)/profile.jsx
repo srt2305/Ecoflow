@@ -37,7 +37,6 @@ const Porfile = () => {
             location={item.location}
             status={item.status}
             avatar={item.creator.avatar}
-            username={item.creator.username}
           />
         )}
         ListHeaderComponent={() => (

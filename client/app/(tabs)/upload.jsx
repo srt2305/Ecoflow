@@ -1,27 +1,23 @@
 import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Image,
   Alert,
-  Button,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import FormField from "../../components/FormField";
-import CustomButton from "../../components/CustomButton";
-import { useEffect, useState } from "react";
-import { icons } from "../../constants";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
-import { createImage } from "../../lib/appwrite";
-import { useGlobalContext } from "../../context/GlobalProvider";
 import { Picker } from "@react-native-picker/picker";
+import * as DocumentPicker from "expo-document-picker";
+import { router } from "expo-router";
+import { useState } from "react";
+import CustomButton from "../../components/CustomButton";
+import FormField from "../../components/FormField";
+import { icons } from "../../constants";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { createImage } from "../../lib/appwrite";
 // import Geolocation from "@react-native-community/geolocation";
-import * as Location from "expo-location";
-import * as geolib from "geolib";
-import { FileSystem } from "react-native-unimodules"; // Import FileSystem from expo if you're using Expo
 
 const Upload = () => {
   const { user } = useGlobalContext();
@@ -120,16 +116,16 @@ const Upload = () => {
   };
 
   const openPicker = async (selectType) => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ["image/png", "image/jpg", "image/jpeg"],
     });
 
     if (!result.canceled) {
       if (selectType === "image") {
-        setform({ ...form, image: result.assets[0] });
+        setform({
+          ...form,
+          image: result.assets[0],
+        });
       }
     }
   };

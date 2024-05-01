@@ -10,7 +10,6 @@ const PostCard = ({
   location,
   status,
   avatar,
-  username,
 }) => {
   return (
     <TouchableOpacity
@@ -42,7 +41,7 @@ const PostCard = ({
             >
               {description}
             </Text>
-            <Text className="text-14 mb-2  text-white">{location}</Text>
+            <Text className="text-xs text-white font-pregular">{location}</Text>
           </View>
         </View>
 

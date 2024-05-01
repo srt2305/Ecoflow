@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { images } from "../../constants";
+import { home, images } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
 import { getAllPosts } from "../../lib/appwrite";
 import EmptyState from "../../components/EmptyState";
@@ -32,6 +32,8 @@ const Home = () => {
     setRefreshing(false);
   };
 
+  // console.log(posts[0]);
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
@@ -46,7 +48,6 @@ const Home = () => {
             location={item.location}
             status={item.status}
             avatar={item.creator.avatar}
-            username={item.creator.username}
           />
         )}
         ListHeaderComponent={() => (
@@ -71,56 +72,25 @@ const Home = () => {
             </View>
 
             <View className="flex-row justify-around items-center">
-              <TouchableOpacity
-                onPress={() => setSelectedCategory("all")}
-                className={`${
-                  selectedCategory === "all"
-                    ? "bg-white py-1 w-20 items-center rounded-xl"
-                    : ""
-                }`}
-              >
-                <Text
+              {home.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() => setSelectedCategory(item)}
                   className={`${
-                    selectedCategory === "all" ? "text-blue-400" : "text-white"
+                    selectedCategory === item
+                      ? "bg-white py-1 w-20 items-center rounded-xl"
+                      : ""
                   }`}
                 >
-                  All
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setSelectedCategory("waste")}
-                className={`${
-                  selectedCategory === "waste"
-                    ? "bg-white py-1 w-20 items-center rounded-xl"
-                    : ""
-                }`}
-              >
-                <Text
-                  className={`${
-                    selectedCategory === "waste"
-                      ? "text-blue-400"
-                      : "text-white"
-                  }`}
-                >
-                  Waste
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setSelectedCategory("road")}
-                className={`${
-                  selectedCategory === "road"
-                    ? "bg-white py-1 w-20 items-center rounded-xl"
-                    : ""
-                }`}
-              >
-                <Text
-                  className={`${
-                    selectedCategory === "road" ? "text-blue-400" : "text-white"
-                  }`}
-                >
-                  Road
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    className={`${
+                      selectedCategory === item ? "text-blue-400" : "text-white"
+                    }`}
+                  >
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
         )}

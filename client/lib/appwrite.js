@@ -123,6 +123,62 @@ export const getAllPosts = async () => {
   }
 };
 
+export const getWasteRenewablePosts = async () => {
+  try {
+    const posts = await databases.listDocuments(databaseId, postCollectionId, [
+      Query.search("category", "waste"),
+      Query.search("final_category", "renewable"),
+      Query.orderDesc("$createdAt"),
+    ]);
+
+    return posts.documents;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getWasteNonrenewablePosts = async () => {
+  try {
+    const posts = await databases.listDocuments(databaseId, postCollectionId, [
+      Query.search("category", "waste"),
+      Query.search("final_category", "non-renewable"),
+      Query.orderDesc("$createdAt"),
+    ]);
+
+    return posts.documents;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getRoadPotPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(databaseId, postCollectionId, [
+      Query.search("category", "road"),
+      Query.search("final_category", "pot-hole"),
+      Query.orderDesc("$createdAt"),
+    ]);
+
+    return posts.documents;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getRoadManPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(databaseId, postCollectionId, [
+      Query.search("category", "road"),
+      Query.search("final_category", "man-hole"),
+      Query.orderDesc("$createdAt"),
+    ]);
+
+    return posts.documents;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const getUserPosts = async (userId) => {
   try {
     const posts = await databases.listDocuments(databaseId, postCollectionId, [
@@ -163,16 +219,12 @@ export const getFilePreview = async (fileId, type) => {
 };
 
 export const uploadFile = async (file, type) => {
-  console.log("file", file);
-
   const asset = {
-    name: "file",
+    name: file.name,
     type: file.mimeType,
-    size: file.filesize,
+    size: file.size,
     uri: file.uri,
   };
-
-  console.log("asset", asset);
 
   try {
     const uploadedFile = await storage.createFile(
@@ -185,22 +237,21 @@ export const uploadFile = async (file, type) => {
 
     return fileUrl;
   } catch (error) {
-    console.log("uploadfile error");
     throw new Error(error);
   }
 };
 
 export const createImage = async (form) => {
-  console.log("form", form);
   try {
-    // const [thumbnailUrl] = await Promise.all([uploadFile(form.image, "image")]);
+    const [imageUrl] = await Promise.all([uploadFile(form.image, "image")]);
+
     const newPost = await databases.createDocument(
       databaseId,
       postCollectionId,
       ID.unique(),
       {
         title: form.title,
-        image: form.image.uri,
+        image: imageUrl,
         description: form.description,
         status: form.status,
         creator: form.userId,
@@ -210,7 +261,6 @@ export const createImage = async (form) => {
         remark: form.remark,
       }
     );
-    ``;
 
     return newPost;
   } catch (error) {
