@@ -89,22 +89,31 @@ const Upload = () => {
   const checkValidity = async () => {
     const imageData = form.image;
     try {
-      const imageFile = await FileSystem.readAsStringAsync(imageData.uri, {
-        encoding: FileSystem.EncodingType.Base64,
+      const formData = new FormData();
+      formData.append("image", {
+        uri: imageData.uri,
+        type: "image/jpeg",
+        name: "image.jpg",
       });
 
-      console.log("here");
-      const response = await fetch(`${process.env.API}/handle-image`, {
+      const response = await fetch(`http://192.168.1.7:8000/api/handle-image`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ imageData: imageFile }),
+        body: formData,
       });
 
       if (!response.ok) {
+        console.log(response);
         throw new Error("Failed to upload image");
+      } else {
+        const data = await response.json();
+        console.log(data.message.Scale);
+        if (data.message.Scale === "small") {
+          return false;
+        } else {
+          return true;
+        }
       }
+      ``;
     } catch (error) {
       console.error(error);
     }
@@ -135,7 +144,10 @@ const Upload = () => {
     setUploading(true);
 
     try {
-      // await checkValidity();
+      const isValid = await checkValidity();
+      if (!isValid) {
+        return Alert.alert("Error", "we cannot consider this as a waste");
+      }
       await createImage({
         ...form,
         status: false,
