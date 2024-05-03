@@ -32,7 +32,7 @@ const Upload = () => {
     location: "",
     category: "",
   });
-
+  const [data, setData] = useState({});
   const [value, setValue] = useState("");
   // const [userLocation, setUserLocation] = useState(null);
   // const [sharedLocations, setSharedLocations] = useState([]);
@@ -105,6 +105,7 @@ const Upload = () => {
         throw new Error("Failed to upload image");
       } else {
         const data = await response.json();
+        setData(data.message);
         console.log(data.message.Scale);
         if (data.message.Scale === "small") {
           return false;
@@ -143,15 +144,15 @@ const Upload = () => {
     setUploading(true);
 
     try {
-      // const isValid = await checkValidity();
-      // if (!isValid) {
-      //   return Alert.alert("Error", "we cannot consider this as a waste");
-      // }
+      const isValid = await checkValidity();
+      if (!isValid) {
+        return Alert.alert("Error", "we cannot consider this as a waste");
+      }
       await createImage({
         ...form,
         status: false,
-        final_category: "renewable",
-        remark: "recycle",
+        final_category: data["Waste Type"],
+        remark: data["Eco-Friendly Disposal"],
         userId: user.$id,
       });
 

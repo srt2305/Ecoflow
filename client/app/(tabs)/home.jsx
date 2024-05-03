@@ -91,7 +91,7 @@ const Home = () => {
               {home.map((item) => (
                 <TouchableOpacity
                   key={item.id}
-                  onPress={() => fn(item)}
+                  onPress={() => handleTabPress(item)}
                   className={`${
                     selectedCategory === item
                       ? "bg-white py-1 w-20 items-center rounded-xl"
