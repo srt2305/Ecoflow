@@ -20,11 +20,16 @@ import PostCard from "../../components/PostCard";
 const Home = () => {
   const { user } = useGlobalContext();
 
-  const { data: posts, refetch } = useAppwrite(getAllPosts);
-
+  const {
+    data: posts,
+    refetch,
+    getWasteRenewablePosts,
+    getWasteNonrenewablePosts,
+  } = useAppwrite(getAllPosts);
+  cont;
   const [selectedCategory, setSelectedCategory] = useState("all");
-
   const [refreshing, setRefreshing] = useState(false);
+  const [currentPosts, setCurrentPosts] = useState(posts);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -32,7 +37,18 @@ const Home = () => {
     setRefreshing(false);
   };
 
-  // console.log(posts[0]);
+  const handleTabPress = (category) => {
+    setSelectedCategory(category);
+    if (selectedCategory == "Waste") {
+      const data = getWasteNonrenewablePosts();
+      setCurrentPosts(data);
+    } else if (selectedCategory == "Road") {
+      const data = getWasteRenewablePosts();
+      setCurrentPosts(data);
+    } else {
+      setCurrentPosts(posts);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -75,7 +91,7 @@ const Home = () => {
               {home.map((item) => (
                 <TouchableOpacity
                   key={item.id}
-                  onPress={() => setSelectedCategory(item)}
+                  onPress={() => fn(item)}
                   className={`${
                     selectedCategory === item
                       ? "bg-white py-1 w-20 items-center rounded-xl"

@@ -51,11 +51,35 @@ app.post("/api/handle-image", upload.single("image"), async (req, res) => {
   const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
   const prompt = `You are an expert in categorizing waste based on the scale which recognizes the type of waste and the amount of waste. You are working in a waste management company and you are responsible for categorizing the waste. among the following categories plastic, non-renewable, renewable, wet and dry. after classifying suggest how to dispose them in an environmental friendly manner.
       based on the image given answer the following in the given order select the options provided in the parentheses which holds true the most.and give each value like scale and waste type below given value should be given in object  format
-     {"Scale": Identify the scale of the waste as one of the following: (small, medium, large)
+     {
+    "Scale": Identify the scale of the waste as one of the following: (small, medium, large)
   "Waste Type": Classify the type of waste from these categories: (non-renewable, renewable)
   "Eco-Friendly Disposal": Suggest the most environmentally friendly way to dispose of this waste type.
-  "Recycling Potential": Indicate if this waste type can be recycled, and if so, suggest the appropriate recycling method.}
+  "Recycling Potential": Indicate if this waste type can be recycled, and if so, suggest the appropriate recycling method.
+}
       `;
+
+  const imageParts = [fileToGenerativePart("./uploads/image.jpg", "image/png")];
+  const result = await model.generateContent([prompt, ...imageParts]);
+  const response = await result.response;
+  const text = response.text();
+  const data = JSON.parse(text);
+  console.log("2", data);
+  console.log("3", typeof data);
+  res.status(200).send({ message: data });
+});
+
+app.post("/api/handle-image-road", upload.single("image"), async (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
+  const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+  const prompt = `You are an expert in categorizing waste based on the scale which recognizes the type of holes and the scale. You are working in a waste management company and you are responsible for categorizing the road pothole. among the following categories pothole, manhole. after classifying suggest how to fix the problem.
+      based on the image given answer the following in the given order select the options provided in the parentheses which holds true the most. and give each value like scale and waste type below given value should be given in object  format
+     {
+    "Scale": Identify the scale of the pathhole as one of the following: (small, medium, large)
+  "Type": Classify the type of waste from these categories: (pathhole, manhole)
+  "remark": Suggest the most environmentally friendly way to fix it.
+} `;
 
   const imageParts = [fileToGenerativePart("./uploads/image.jpg", "image/png")];
   const result = await model.generateContent([prompt, ...imageParts]);
