@@ -8,29 +8,12 @@ import {
   Storage,
 } from "react-native-appwrite";
 
-export const config = {
-  endpoint: "https://cloud.appwrite.io/v1",
-  platform: "com.native.ecoflow",
-  projectId: "662d97cf002682c1fbd1",
-  databaseId: "662e2bd6000cfb7ac0dd",
-  userCollectionId: "662e2bea00254dc0d67e",
-  postCollectionId: "662e2c0e0033e70b1615",
-  storageId: "662e2dfd0036cf20d8c2",
-};
-
-const {
-  endpoint,
-  platform,
-  projectId,
-  databaseId,
-  userCollectionId,
-  postCollectionId,
-  storageId,
-} = config;
-
 const client = new Client();
 
-client.setEndpoint(endpoint).setProject(projectId).setPlatform(platform);
+client
+  .setEndpoint(process.env.ENDPOINT)
+  .setProject(process.env.PROJECTID)
+  .setPlatform(process.env.PLATFORM);
 
 const account = new Account(client);
 const avatars = new Avatars(client);
@@ -53,8 +36,8 @@ export const createUser = async (email, password, username) => {
     await signIn(email, password);
 
     const newUser = await databases.createDocument(
-      databaseId,
-      userCollectionId,
+      process.env.DATABASEID,
+      process.env.USERCOLLECTIONID,
       ID.unique(),
       {
         accountId: newAccount.$id,
@@ -88,8 +71,8 @@ export const getCurrentUser = async () => {
     if (!currentAccount) throw Error;
 
     const currentUser = await databases.listDocuments(
-      databaseId,
-      userCollectionId,
+      process.env.DATABASEID,
+      process.env.USERCOLLECTIONID,
       [Query.equal("accountId", currentAccount.$id)]
     );
 
@@ -113,9 +96,11 @@ export const signOut = async () => {
 
 export const getAllPosts = async () => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.orderDesc("$createdAt"),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [Query.orderDesc("$createdAt")]
+    );
 
     return posts.documents;
   } catch (error) {
@@ -125,11 +110,15 @@ export const getAllPosts = async () => {
 
 export const getWasteRenewablePosts = async () => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.search("category", "waste"),
-      Query.search("final_category", "renewable"),
-      Query.orderDesc("$createdAt"),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [
+        Query.search("category", "waste"),
+        Query.search("final_category", "renewable"),
+        Query.orderDesc("$createdAt"),
+      ]
+    );
 
     return posts.documents;
   } catch (error) {
@@ -139,11 +128,15 @@ export const getWasteRenewablePosts = async () => {
 
 export const getWasteNonrenewablePosts = async () => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.search("category", "waste"),
-      Query.search("final_category", "non-renewable"),
-      Query.orderDesc("$createdAt"),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [
+        Query.search("category", "waste"),
+        Query.search("final_category", "non-renewable"),
+        Query.orderDesc("$createdAt"),
+      ]
+    );
 
     return posts.documents;
   } catch (error) {
@@ -153,11 +146,15 @@ export const getWasteNonrenewablePosts = async () => {
 
 export const getRoadPotPosts = async () => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.search("category", "road"),
-      Query.search("final_category", "pot-hole"),
-      Query.orderDesc("$createdAt"),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [
+        Query.search("category", "road"),
+        Query.search("final_category", "pot-hole"),
+        Query.orderDesc("$createdAt"),
+      ]
+    );
 
     return posts.documents;
   } catch (error) {
@@ -167,11 +164,15 @@ export const getRoadPotPosts = async () => {
 
 export const getRoadManPosts = async () => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.search("category", "road"),
-      Query.search("final_category", "man-hole"),
-      Query.orderDesc("$createdAt"),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [
+        Query.search("category", "road"),
+        Query.search("final_category", "man-hole"),
+        Query.orderDesc("$createdAt"),
+      ]
+    );
 
     return posts.documents;
   } catch (error) {
@@ -181,10 +182,11 @@ export const getRoadManPosts = async () => {
 
 export const getUserPosts = async (userId) => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.equal("creator", userId),
-      Query.orderDesc("$createdAt"),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+    );
 
     return posts.documents;
   } catch (error) {
@@ -198,7 +200,7 @@ export const getFilePreview = async (fileId, type) => {
   try {
     if (type === "image") {
       fileUrl = storage.getFilePreview(
-        storageId,
+        process.env.STORAGEID,
         fileId,
         2000,
         2000,
@@ -228,7 +230,7 @@ export const uploadFile = async (file, type) => {
 
   try {
     const uploadedFile = await storage.createFile(
-      storageId,
+      process.env.STORAGEID,
       ID.unique(),
       asset
     );
@@ -246,8 +248,8 @@ export const createImage = async (form) => {
     const [imageUrl] = await Promise.all([uploadFile(form.image, "image")]);
 
     const newPost = await databases.createDocument(
-      databaseId,
-      postCollectionId,
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
       ID.unique(),
       {
         title: form.title,
@@ -270,9 +272,11 @@ export const createImage = async (form) => {
 
 export const searchPost = async (postId) => {
   try {
-    const posts = await databases.listDocuments(databaseId, postCollectionId, [
-      Query.equal("$id", postId),
-    ]);
+    const posts = await databases.listDocuments(
+      process.env.DATABASEID,
+      process.env.POSTCOLLECTIONID,
+      [Query.equal("$id", postId)]
+    );
 
     return posts.documents[0];
   } catch (error) {

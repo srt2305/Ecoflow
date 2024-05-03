@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { home, images } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
 import { getAllPosts } from "../../lib/appwrite";
 import EmptyState from "../../components/EmptyState";
@@ -20,16 +19,13 @@ import PostCard from "../../components/PostCard";
 const Home = () => {
   const { user } = useGlobalContext();
 
-  const {
-    data: posts,
-    refetch,
-    getWasteRenewablePosts,
-    getWasteNonrenewablePosts,
-  } = useAppwrite(getAllPosts);
-  cont;
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+
+  // const [currentPosts, setCurrentPosts] = useState(posts);
+
+  // const [selectedCategory, setSelectedCategory] = useState("All");
+
   const [refreshing, setRefreshing] = useState(false);
-  const [currentPosts, setCurrentPosts] = useState(posts);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -37,18 +33,7 @@ const Home = () => {
     setRefreshing(false);
   };
 
-  const handleTabPress = (category) => {
-    setSelectedCategory(category);
-    if (selectedCategory == "Waste") {
-      const data = getWasteNonrenewablePosts();
-      setCurrentPosts(data);
-    } else if (selectedCategory == "Road") {
-      const data = getWasteRenewablePosts();
-      setCurrentPosts(data);
-    } else {
-      setCurrentPosts(posts);
-    }
-  };
+  // console.log(selectedCategory);
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -87,11 +72,11 @@ const Home = () => {
               </View>
             </View>
 
-            <View className="flex-row justify-around items-center">
+            {/* <View className="flex-row justify-around items-center">
               {home.map((item) => (
                 <TouchableOpacity
                   key={item.id}
-                  onPress={() => handleTabPress(item)}
+                  onPress={() => setSelectedCategory(item)}
                   className={`${
                     selectedCategory === item
                       ? "bg-white py-1 w-20 items-center rounded-xl"
@@ -107,7 +92,7 @@ const Home = () => {
                   </Text>
                 </TouchableOpacity>
               ))}
-            </View>
+            </View> */}
           </View>
         )}
         ListEmptyComponent={() => (

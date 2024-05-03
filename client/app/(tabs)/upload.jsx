@@ -9,15 +9,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Picker } from "@react-native-picker/picker";
-import * as DocumentPicker from "expo-document-picker";
-import { router } from "expo-router";
 import { useState } from "react";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { icons } from "../../constants";
 import * as DocumentPicker from "expo-document-picker";
 import { router } from "expo-router";
-import { createImage } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { createImage } from "../../lib/appwrite";
 // import Geolocation from "@react-native-community/geolocation";
@@ -145,6 +142,7 @@ const Upload = () => {
 
     try {
       const isValid = await checkValidity();
+      console.log(isValid);
       if (!isValid) {
         return Alert.alert("Error", "we cannot consider this as a waste");
       }
