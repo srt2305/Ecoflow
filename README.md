@@ -47,7 +47,7 @@ This project combines the power of Node.js for server-side functionality and Rea
 
 **Sample env for client**
 
-API="http://localhost:8000" 
+API="http://localhost:8000"\
 ENDPOINT: "",\
 PLATFORM: "",\
 PROJECTID: "",\
