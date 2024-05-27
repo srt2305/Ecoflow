@@ -43,17 +43,3 @@ This project combines the power of Node.js for server-side functionality and Rea
    npm install
    npm start
    ```
-
-
-**Sample env for client**
-API="http://localhost:8000"
-ENDPOINT: "",
-PLATFORM: "",
-PROJECTID: "",
-DATABASEID: "",
-USERCOLLECTIONID: "",
-POSTCOLLECTIONID: "",
-STORAGEID: "",
-
-**Sample env for server**
-CLIENT_URL = "http://192.168.1.7:8081/"
