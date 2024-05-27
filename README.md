@@ -1,5 +1,7 @@
 # EcoFlow
 
+# [Your Project Name]
+
 This project combines the power of Node.js for server-side functionality and React Native for building a cross-platform mobile application.
 
 ## Prerequisites
